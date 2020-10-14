@@ -1,0 +1,4 @@
+INSERT INTO properties (owner_id,title,description,thumbnail_photo_url,cover_photo_url,cost_per_night,parking_spaces,number_of_bathrooms,number_of_bedroooms,country,street,province,post_code,active) VALUES
+('1','Calgary House','a house','https://miro.medium.com/max/700/1*nCO1iAkmeK-vtobvwOZJJw.png','https://miro.medium.com/max/3600/1*nCO1iAkmeK-vtobvwOZJJw.png',500,2,2,3,'Canada','14th ave sw','Alberta','abc 123', true),
+('2','Calgary Apartment','an apartment','https://homeofcalgarycondos.com/wp-content/uploads/2019/10/Nova-Condo-3.jpg','https://homeofcalgarycondos.com/wp-content/uploads/2019/10/Nova-Condo.jpg',250,1,2,2,'Canada','12th ave sw','Alberta','def 456', true),
+('3','Calgary Tent','a tent','https://www.ctvnews.ca/polopoly_fs/1.1882317.1403554376!/httpImage/image.jpg_gen/derivatives/landscape_960/image.jpg','https://i.ytimg.com/vi/YTpW2yiD-v4/maxresdefault.jpg',100,100,0,1,'Canada','somepark','Alberta','ghi 789', true)
