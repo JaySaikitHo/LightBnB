@@ -33,7 +33,7 @@ const getUserWithId = function(id) {
   return pool.query(`SELECT *
   FROM users
   WHERE id = $1`,[id])
-  .then(res=>rows[0]);
+  .then(res => res.rows[0]);
 }
 exports.getUserWithId = getUserWithId;
 
@@ -46,7 +46,7 @@ exports.getUserWithId = getUserWithId;
 const addUser =  function(user) {
   return pool.query(`INSERT INTO users (email,name,password) VALUES
   ($1,$2,$3) RETURNING *;`,[user.name,user.email,user.password])
-  .then(res => res.rows[0])
+  .then(res => res.rows[0]);
 
 }
 exports.addUser = addUser;
@@ -95,7 +95,11 @@ const getAllProperties = function(options, limit = 10) {
       queryParams.push(`%${options.city}%`);
       queryString += `WHERE city LIKE $${queryParams.length} `;
     }
-  
+    
+    if (options.maximum_price_per_night){
+      queryParams.push(`${options.maximum_price_per_night}`)
+      queryString += `AND cost_per_night < ${queryParms.length}`;
+    }
     // 4
     queryParams.push(limit);
     queryString += `
