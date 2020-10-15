@@ -1,6 +1,7 @@
 const properties = require('./json/properties.json');
 const users = require('./json/users.json');
 const { Pool } = require('pg');
+const { query } = require('express');
 
 const pool = new Pool({
   user: 'vagrant',
@@ -88,25 +89,39 @@ const getAllProperties = function(options, limit = 10) {
     SELECT properties.*, avg(property_reviews.rating) as average_rating
     FROM properties
     JOIN property_reviews ON properties.id = property_id
+    WHERE TRUE
     `;
   
     // 3
     if (options.city) {
-      queryParams.push(`%${options.city}%`);
-      queryString += `WHERE city LIKE $${queryParams.length} `;
+      queryParams.push(`%${options.city.toLowerCase()}%`);
+      queryString += `AND LOWER(city) LIKE $${queryParams.length}`;
     }
     
-    if (options.maximum_price_per_night){
-      queryParams.push(`${options.maximum_price_per_night}`)
-      queryString += `AND cost_per_night < ${queryParms.length}`;
+    if (options.minimum_price_per_night) {
+      queryParams.push(options.minimum_price_per_night * 100);
+      queryString += `AND cost_per_night > $${queryParams.length}`;
     }
+    
+    if (options.maximum_price_per_night) {
+      queryParams.push(options.maximum_price_per_night * 100);
+      queryString += `AND cost_per_night < $${queryParams.length}`;
+    }
+    
+    
+
+    queryString += `GROUP BY properties.id\n`
+    
+    if (options.minimum_rating) {
+      queryParams.push(options.minimum_rating);
+      queryString += `HAVING AVG(rating) >= $${queryParams.length}`;
+    }
+    
     // 4
     queryParams.push(limit);
-    queryString += `
-    GROUP BY properties.id
-    ORDER BY cost_per_night
-    LIMIT $${queryParams.length};
-    `;
+    queryString += 
+    `ORDER BY cost_per_night
+    LIMIT $${queryParams.length};`;
   
     // 5
     console.log(queryString, queryParams);
